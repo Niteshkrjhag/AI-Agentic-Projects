@@ -4,20 +4,22 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-ollama_api = os.getenv("OLLAMA_API_KEY")
-print(ollama_api)
+class LocalOllamaLLM:
+    def __init__(self, model = "gpt-oss:120b"):
+        self.api_key = os.getenv("OLLAMA_API_KEY ")
+        self.client = Client(
+            host = "https://ollama.com",
+            headers = {'Authorization': f"Bearer {self.api_key}"}
+        )
+        self.model = model
 
-client = Client(
-    host="https://ollama.com",
-    headers={'Authorization': 'Bearer ' + ollama_api}
-)
-
-messages = [
-  {
-    'role': 'user',
-    'content': 'Why is the sky blue?',
-  },
-]
-
-for part in client.chat('gpt-oss:120b', messages=messages, stream=True):
-  print(part['message']['content'], end='', flush=True)
+    def call(self, prompt:str)-> str:
+        messages = [
+            {"role":"user", "content":prompt}
+        ]
+        response_text = ""
+        
+        for part in self.client.chat(self.model, messages=messages, stream= True):
+            chunk = part["message"]["content"]
+            response_text += chunk
+        return response_text
