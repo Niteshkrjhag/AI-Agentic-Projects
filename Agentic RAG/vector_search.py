@@ -3,11 +3,6 @@ import numpy as np
 import requests
 from typing import List, Dict, Any
 
-from openai import OpenAI
-
-# client = OpenAI()
-
-
 dimension = 768
 
 #In the context of vector databases and libraries like FAISS (Facebook AI Similarity Search), an index is a 
