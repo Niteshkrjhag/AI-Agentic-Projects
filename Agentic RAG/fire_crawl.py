@@ -3,10 +3,18 @@ import os
 from firecrawl import Firecrawl
 
 load_dotenv()
-api_key = os.getenv("FIRECRAWL_API_KEY")
 
-fc = Firecrawl(api_key=api_key)
+class FireCrawl:
+    def __init__(self):
+        self.api_key = os.getenv("FIRECRAWL_API_KEY")
+        self.firecrawl = Firecrawl(api_key = self.api_key)
 
-result = fc.search("AI news")
+    def __call__(self, query: str):
+        return self.firecrawl.search(query)
 
-print(result)
+
+
+if __name__=="__main__":
+    fc = FireCrawl()
+    print(fc("AI news"))
+

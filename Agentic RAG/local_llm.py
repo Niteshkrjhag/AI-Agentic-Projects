@@ -6,14 +6,14 @@ load_dotenv()
 
 class LocalOllamaLLM:
     def __init__(self, model = "gpt-oss:120b"):
-        self.api_key = os.getenv("OLLAMA_API_KEY ")
+        self.api_key = os.getenv("OLLAMA_API_KEY")
         self.client = Client(
             host = "https://ollama.com",
             headers = {'Authorization': f"Bearer {self.api_key}"}
         )
         self.model = model
 
-    def call(self, prompt:str)-> str:
+    def __call__(self, prompt:str)-> str:
         messages = [
             {"role":"user", "content":prompt}
         ]
@@ -22,4 +22,9 @@ class LocalOllamaLLM:
         for part in self.client.chat(self.model, messages=messages, stream= True):
             chunk = part["message"]["content"]
             response_text += chunk
-        return response_text
+            print(part['message']['content'], end='', flush=True)
+    
+
+if __name__ == '__main__':
+    model = LocalOllamaLLM()
+    print(model("Hello, How are you ?"))
