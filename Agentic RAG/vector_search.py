@@ -36,10 +36,14 @@ class VectorDBSearchTool:
         query_vector = np.array([self.get_embedding(query)]).astype("float32")
         distances, indexes = self.index.search(query_vector, k)
         
-        results = [
-            {"score": float(dist), "document": self.documents[i]}
-            for dist, i in zip(distances[0], indexes[0])
-        ]
+        results = [ ]
+        for dist, i in zip(distances[0], indexes[0]):
+
+            # if faiss don't finds relevent docs then it returns -1 so we need to handle this case
+            if i == -1:
+                continue
+
+            results.append({"score": float(dist), "document": self.documents[i]})
         return results # arranged in lower the distance better closer the alignment of document to the query
 
 
